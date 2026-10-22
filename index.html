@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kalkulator HPP Kopi Botolan</title>
+<style>
+:root{--bg:#f3efe8;--card:#fffdf9;--ink:#2a1d14;--mut:#7a6a5c;--line:#ddd3c6;--acc:#4a2c1a;--accfg:#fff;--ok:#2f6b3f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1a1410;--card:#241c16;--ink:#f1e7db;--mut:#a8998a;--line:#3a2f26;--acc:#d9b48a;--accfg:#1a1410;--ok:#8fd3a0}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#1a1410;--card:#241c16;--ink:#f1e7db;--mut:#a8998a;--line:#3a2f26;--acc:#d9b48a;--accfg:#1a1410;--ok:#8fd3a0}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fraunces",Georgia,serif;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;margin:8px 0 4px}
+p.s{color:var(--mut);margin:0 0 18px;font-family:system-ui,sans-serif;font-size:.9rem}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+h2{font-size:1.05rem;margin:0 0 12px}
+label{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--mut);display:block;margin-bottom:4px}
+input{width:100%;font:inherit;font-family:system-ui,sans-serif;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:0}
+input:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;gap:8px;align-items:end;margin-bottom:10px}
+.ing{grid-template-columns:1fr 130px 36px}
+.bot{grid-template-columns:90px 1fr 36px;border-top:1px solid var(--line);padding-top:10px}
+.bot:first-of-type{border-top:0;padding-top:0}
+.res{font-family:system-ui,sans-serif;font-size:.85rem;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 14px;grid-column:1/-1}
+.res b{color:var(--ink);font-size:1.05rem}
+.res .jual b{color:var(--ok)}
+button{font:inherit;font-family:system-ui,sans-serif;cursor:pointer;border-radius:6px}
+.x{height:38px;border:1px solid var(--line);background:none;color:var(--mut)}
+.add{width:100%;padding:10px;border:1px dashed var(--acc);background:none;color:var(--acc);font-weight:600}
+.total{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;padding-top:8px;border-top:1px solid var(--line)}
+.total b{font-size:1.15rem}
+.base{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
+<body>
+<main>
+<h1>Kalkulator HPP Kopi Botolan</h1>
+<p class="s">Isi biaya bahan untuk 1 liter, lalu tambahkan ukuran botol lain. Harga dihitung otomatis.</p>
+
+<section>
+<h2>Biaya bahan per 1 liter</h2>
+<div id="ings"></div>
+<button class="add" id="addIng">+ Tambah bahan</button>
+<div class="total" style="margin-top:12px"><span>HPP bahan 1 liter</span><b id="base">Rp 0</b></div>
+</section>
+
+<section>
+<h2>Ukuran botol</h2>
+<div class="base" style="margin-bottom:14px">
+<div><label for="margin">Margin keuntungan (%)</label><input id="margin" type="number" inputmode="decimal" value="50" min="0"></div>
+<div><label for="pack">Kemasan default per botol (Rp)</label><input id="pack" type="number" inputmode="decimal" value="1500" min="0"></div>
+</div>
+<div id="bots"></div>
+<button class="add" id="addBot">+ Add ukuran botol</button>
+</section>
+</main>
+
+<script>
+const rp=n=>"Rp "+Math.round(n||0).toLocaleString("id-ID");
+const $=id=>document.getElementById(id);
+let ings=[{n:"Biji kopi",v:25000},{n:"Susu",v:12000},{n:"Gula / sirup",v:5000}];
+let bots=[{ml:1000},{ml:250},{ml:500}];
+
+function base(){return ings.reduce((a,i)=>a+(+i.v||0),0)}
+
+function drawIngs(){
+  $("ings").innerHTML=ings.map((it,i)=>`<div class="row ing">
+  <div><label>Nama bahan</label><input data-i="${i}" data-k="n" value="${it.n.replace(/"/g,"&quot;")}"></div>
+  <div><label>Rp / 1 liter</label><input data-i="${i}" data-k="v" type="number" inputmode="decimal" min="0" value="${it.v}"></div>
+  <button class="x" data-del="${i}" aria-label="Hapus bahan">✕</button></div>`).join("");
+}
+function drawBots(){
+  $("bots").innerHTML=bots.map((b,i)=>`<div class="row bot">
+  <div><label>Ukuran (ml)</label><input data-b="${i}" type="number" inputmode="decimal" min="0" value="${b.ml}"></div>
+  <div><label>Kemasan khusus (opsional)</label><input data-p="${i}" type="number" inputmode="decimal" min="0" placeholder="pakai default" value="${b.p??""}"></div>
+  <button class="x" data-delb="${i}" aria-label="Hapus ukuran">✕</button>
+  <div class="res" id="r${i}"></div></div>`).join("");
+  calc();
+}
+function calc(){
+  const bs=base(), m=(+$("margin").value||0)/100, dp=+$("pack").value||0;
+  $("base").textContent=rp(bs);
+  bots.forEach((b,i)=>{
+    const pack=(b.p===undefined||b.p==="")?dp:(+b.p||0);
+    const bahan=bs/1000*(+b.ml||0), hpp=bahan+pack, jual=hpp*(1+m);
+    const el=$("r"+i); if(!el)return;
+    el.innerHTML=`<span>Bahan ${rp(bahan)}</span><span>Kemasan ${rp(pack)}</span><span>HPP <b>${rp(hpp)}</b></span><span class="jual">Harga jual <b>${rp(jual)}</b></span>`;
+  });
+}
+$("ings").addEventListener("input",e=>{const t=e.target,i=t.dataset.i;if(i==null)return;ings[i][t.dataset.k]=t.dataset.k==="v"?(+t.value||0):t.value;calc()});
+$("ings").addEventListener("click",e=>{const d=e.target.dataset.del;if(d==null)return;ings.splice(d,1);drawIngs();calc()});
+$("addIng").onclick=()=>{ings.push({n:"",v:0});drawIngs();calc();const f=$("ings").querySelectorAll("input[data-k=n]");f[f.length-1].focus()};
+$("bots").addEventListener("input",e=>{const t=e.target;
+  if(t.dataset.b!=null)bots[t.dataset.b].ml=t.value;
+  if(t.dataset.p!=null)bots[t.dataset.p].p=t.value;calc()});
+$("bots").addEventListener("click",e=>{const d=e.target.dataset.delb;if(d==null)return;bots.splice(d,1);drawBots()});
+$("addBot").onclick=()=>{bots.push({ml:""});drawBots();const f=$("bots").querySelectorAll("input[data-b]");f[f.length-1].focus()};
+$("margin").oninput=calc;$("pack").oninput=calc;
+drawIngs();drawBots();
+</script>
+</body>
+</html>
