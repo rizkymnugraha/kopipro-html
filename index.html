@@ -3,103 +3,439 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kalkulator HPP Kopi Botolan</title>
+<title>Kalkulator Resep Kopi Susu</title>
 <style>
-:root{--bg:#f3efe8;--card:#fffdf9;--ink:#2a1d14;--mut:#7a6a5c;--line:#ddd3c6;--acc:#4a2c1a;--accfg:#fff;--ok:#2f6b3f;
+:root{--bg:#faf6f0;--card:#fff;--text:#2b2118;--muted:#7a6a5b;--line:#e6dccf;--acc:#8a5a2b;--accbg:#f3e6d6;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1a1410;--card:#241c16;--ink:#f1e7db;--mut:#a8998a;--line:#3a2f26;--acc:#d9b48a;--accfg:#1a1410;--ok:#8fd3a0}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#1a1410;--card:#241c16;--ink:#f1e7db;--mut:#a8998a;--line:#3a2f26;--acc:#d9b48a;--accfg:#1a1410;--ok:#8fd3a0}
-*{box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1511;--card:#261e18;--text:#f1e8de;--muted:#b3a291;--line:#3b3027;--acc:#e0a96d;--accbg:#3a2c1f}}
+:root[data-theme="dark"]{--bg:#1b1511;--card:#261e18;--text:#f1e8de;--muted:#b3a291;--line:#3b3027;--acc:#e0a96d;--accbg:#3a2c1f}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fraunces",Georgia,serif;line-height:1.45}
-main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:1.6rem;margin:8px 0 4px}
-p.s{color:var(--mut);margin:0 0 18px;font-family:system-ui,sans-serif;font-size:.9rem}
-section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
-h2{font-size:1.05rem;margin:0 0 12px}
-label{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--mut);display:block;margin-bottom:4px}
-input{width:100%;font:inherit;font-family:system-ui,sans-serif;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:0}
-input:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-.row{display:grid;gap:8px;align-items:end;margin-bottom:10px}
-.ing{grid-template-columns:1fr 130px 36px}
-.bot{grid-template-columns:90px 1fr 36px;border-top:1px solid var(--line);padding-top:10px}
-.bot:first-of-type{border-top:0;padding-top:0}
-.res{font-family:system-ui,sans-serif;font-size:.85rem;color:var(--mut);display:flex;flex-wrap:wrap;gap:4px 14px;grid-column:1/-1}
-.res b{color:var(--ink);font-size:1.05rem}
-.res .jual b{color:var(--ok)}
-button{font:inherit;font-family:system-ui,sans-serif;cursor:pointer;border-radius:6px}
-.x{height:38px;border:1px solid var(--line);background:none;color:var(--mut)}
-.add{width:100%;padding:10px;border:1px dashed var(--acc);background:none;color:var(--acc);font-weight:600}
-.total{display:flex;justify-content:space-between;font-family:system-ui,sans-serif;padding-top:8px;border-top:1px solid var(--line)}
-.total b{font-size:1.15rem}
-.base{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:16px;margin:18px 0 8px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.card{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:14px;color:var(--acc)}
+.x{border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input,select{width:100%;font-size:17px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--text);padding:6px 10px;border-radius:999px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.mini{font-size:13px;color:var(--muted);margin-top:8px}
+.add{width:100%;padding:12px;border:1.5px dashed var(--acc);background:transparent;color:var(--acc);border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
+.sum{display:flex;gap:8px;text-align:center}
+.sum div{flex:1;background:var(--accbg);border-radius:10px;padding:10px 4px}
+.sum b{display:block;font-size:18px}
+.sum span{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:8px 6px;border-bottom:1px solid var(--line)}
+td:nth-child(n+2){text-align:right;white-space:nowrap}
+th{font-size:12px;color:var(--muted);text-align:right;padding:6px;border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+tr.sec td{text-align:left;font-size:12px;font-weight:700;color:var(--acc);padding-top:14px;border-bottom:none}
+tr.b td{font-weight:700}
+tr.sub td:first-child{padding-left:16px;color:var(--muted)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.er{display:grid;grid-template-columns:1fr 78px 62px 28px;gap:6px;margin-bottom:6px;align-items:center}
+.er input,.er select{font-size:15px;padding:8px}
+.nm{font-weight:700}
+.tb input{font-size:14px;padding:6px 8px;min-width:76px}
+.tb td:first-child input{min-width:140px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
 </style>
 </head>
 <body>
-<main>
-<h1>Kalkulator HPP Kopi Botolan</h1>
-<p class="s">Isi biaya bahan untuk 1 liter, lalu tambahkan ukuran botol lain. Harga dihitung otomatis.</p>
-
-<section>
-<h2>Biaya bahan per 1 liter</h2>
-<div id="ings"></div>
-<button class="add" id="addIng">+ Tambah bahan</button>
-<div class="total" style="margin-top:12px"><span>HPP bahan 1 liter</span><b id="base">Rp 0</b></div>
-</section>
-
-<section>
-<h2>Ukuran botol</h2>
-<div class="base" style="margin-bottom:14px">
-<div><label for="margin">Margin keuntungan (%)</label><input id="margin" type="number" inputmode="decimal" value="50" min="0"></div>
-<div><label for="pack">Kemasan default per botol (Rp)</label><input id="pack" type="number" inputmode="decimal" value="1500" min="0"></div>
-</div>
-<div id="bots"></div>
-<button class="add" id="addBot">+ Add ukuran botol</button>
-</section>
-</main>
-
+<div class="wrap" id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script>
-const rp=n=>"Rp "+Math.round(n||0).toLocaleString("id-ID");
-const $=id=>document.getElementById(id);
-let ings=[{n:"Biji kopi",v:25000},{n:"Susu",v:12000},{n:"Gula / sirup",v:5000}];
-let bots=[{ml:1000},{ml:250},{ml:500}];
+const h = React.createElement;
+const { useState, useEffect } = React;
+const KEY = 'kopi-susu-resep-v1';
+const milkOf = (v) => v.milk || 'Susu UHT';
+const OAT = (id) => ({ id, name: 'Kopi oatside gula aren', milk: 'Susu Oatside', mix: [{ name: 'Kopi', unit: 'ml', qty: 400 }, { name: 'Gula aren', unit: 'gr', qty: 55 }] });
+const DEFAULT = {
+  base: [{ name: 'Krimer', unit: 'gr', qty: 38 }, { name: 'Air', unit: 'ml', qty: 38 }, { name: 'Whipcream', unit: 'gr', qty: 15 }],
+  susu: 1000,
+  variants: [
+    { id: 1, name: 'Kopi susu gula aren', mix: [{ name: 'Kopi', unit: 'ml', qty: 400 }, { name: 'Gula aren', unit: 'gr', qty: 55 }] },
+    { id: 2, name: 'Kopi susu butterscotch', mix: [{ name: 'Kopi', unit: 'ml', qty: 400 }, { name: 'Sirup butterscotch', unit: 'gr', qty: 75 }] },
+    { id: 3, name: 'Matcha latte', mix: [{ name: 'Matcha', unit: 'gr', qty: 10 }, { name: 'Air (untuk matcha)', unit: 'ml', qty: 400 }, { name: 'Gula', unit: 'gr', qty: 60 }, { name: 'Air (untuk gula)', unit: 'ml', qty: 60 }] },
+    { id: 4, name: 'Thai tea', mix: [{ name: 'Seduhan teh', unit: 'gr', qty: 20 }, { name: 'Air (untuk teh)', unit: 'ml', qty: 400 }, { name: 'Gula', unit: 'gr', qty: 60 }, { name: 'Air (untuk gula)', unit: 'ml', qty: 60 }] },
+    OAT(5)
+  ],
+  nextId: 6,
+  oat: true
+};
+const SIZES = [150, 200, 250, 1000, 'batch'];
+const num = (x) => Math.max(0, Number(x) || 0);
+const sumQ = (a) => a.reduce((s, r) => s + num(r.qty), 0);
+const fmt = (n) => n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
+const sizeLabel = (x) => x === 1000 ? '1 liter' : x + ' ml';
+const bt = (d, v) => sumQ(d.base) + num(d.susu) + sumQ(v.mix);
 
-function base(){return ings.reduce((a,i)=>a+(+i.v||0),0)}
+function load() {
+  try { const r = localStorage.getItem(KEY); if (r) { const d = JSON.parse(r); if (d && d.variants && d.variants.length) {
+      if (!d.oat) { d.nextId = d.nextId || 100; d.variants.push(OAT(d.nextId)); d.nextId += 1; d.oat = true; }
+      return d;
+    } } } catch (e) {}
+  return DEFAULT;
+}
 
-function drawIngs(){
-  $("ings").innerHTML=ings.map((it,i)=>`<div class="row ing">
-  <div><label>Nama bahan</label><input data-i="${i}" data-k="n" value="${it.n.replace(/"/g,"&quot;")}"></div>
-  <div><label>Rp / 1 liter</label><input data-i="${i}" data-k="v" type="number" inputmode="decimal" min="0" value="${it.v}"></div>
-  <button class="x" data-del="${i}" aria-label="Hapus bahan">✕</button></div>`).join("");
+const CKEY = 'kopi-susu-biaya-v1';
+const COST0 = {
+  items: [['Susu UHT Diamond', 'Liter', 1000, 27000], ['Kopi Bubuk', 'Pack', 700, 150000], ['Krimer', 'Pack', 500, 45000], ['Whipping Cream', 'Pack', 400, 70000], ['Botol 150 ml', 'Pcs', 25, 35000], ['Botol 250 ml', 'Pcs', 25, 33500], ['Botol 500 ml', 'Pcs', 12, 32500], ['Botol 1 Liter', 'Pcs', 20, 72000], ['Stiker Label', 'Pcs', 68, 15000], ['Air Mineral', 'Galon', 1, 0], ['Gula Aren Cair', 'Liter', 1000, 48000], ['Sirup Butterscotch', 'Pack', 350, 27000], ['Matcha', 'Pack', 100, 120000], ['Thai Tea', 'Pack', 400, 65000], ['Gula Pasir', 'Pack', 1000, 20000], ['Susu Oatside', 'Liter', 1000, 27000]].map(([name, unit, qty, price]) => ({ name, unit, qty, price })),
+  map: [['Susu UHT', 'Susu UHT Diamond', 1], ['Susu Oatside', 'Susu Oatside', 1], ['Krimer', 'Krimer', 1], ['Whipcream', 'Whipping Cream', 1], ['Air', 'Air Mineral', 1], ['Kopi', 'Kopi Bubuk', 0.1], ['Gula aren', 'Gula Aren Cair', 1], ['Sirup butterscotch', 'Sirup Butterscotch', 1], ['Matcha', 'Matcha', 1], ['Air (untuk matcha)', 'Air Mineral', 1], ['Gula', 'Gula Pasir', 1], ['Air (untuk gula)', 'Air Mineral', 1], ['Seduhan teh', 'Thai Tea', 1], ['Air (untuk teh)', 'Air Mineral', 1]].map(([recipe, item, per]) => ({ recipe, item, per })),
+  pack: { 150: 'Botol 150 ml', 200: 'Botol 250 ml', 250: 'Botol 250 ml', 1000: 'Botol 1 Liter' },
+  sticker: 1,
+  margin: 100
+};
+function loadCost() {
+  try { const r = localStorage.getItem(CKEY); if (r) { const d = JSON.parse(r); if (d && d.items && d.map && d.pack) { d.map.forEach((m) => { if ((m.recipe || '').trim().toLowerCase() === 'kopi' && Number(m.per) === 0.06) m.per = 0.1; }); return d; } } } catch (e) {}
+  return COST0;
 }
-function drawBots(){
-  $("bots").innerHTML=bots.map((b,i)=>`<div class="row bot">
-  <div><label>Ukuran (ml)</label><input data-b="${i}" type="number" inputmode="decimal" min="0" value="${b.ml}"></div>
-  <div><label>Kemasan khusus (opsional)</label><input data-p="${i}" type="number" inputmode="decimal" min="0" placeholder="pakai default" value="${b.p??""}"></div>
-  <button class="x" data-delb="${i}" aria-label="Hapus ukuran">✕</button>
-  <div class="res" id="r${i}"></div></div>`).join("");
-  calc();
+const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const ppu = (it) => num(it.qty) > 0 ? num(it.price) / num(it.qty) : 0;
+const unitCost = (C, name) => {
+  const k = (name || '').trim().toLowerCase();
+  const m = C.map.find((x) => (x.recipe || '').trim().toLowerCase() === k);
+  const it = m && C.items.find((i) => i.name === m.item);
+  return it ? num(m.per) * ppu(it) : null;
+};
+const packCost = (C, size) => {
+  if (size === 'batch') return 0;
+  const b = C.items.find((i) => i.name === C.pack[size]);
+  const s = C.items.find((i) => i.name === 'Stiker Label');
+  return (b ? ppu(b) : 0) + num(C.sticker) * (s ? ppu(s) : 0);
+};
+
+function Rows({ rows, onChange }) {
+  const up = (i, p) => onChange(rows.map((r, k) => k === i ? Object.assign({}, r, p) : r));
+  return h('div', null,
+    rows.map((r, i) => h('div', { className: 'er', key: i },
+      h('input', { value: r.name, placeholder: 'Bahan', onChange: (e) => up(i, { name: e.target.value }) }),
+      h('input', { type: 'number', inputMode: 'decimal', min: 0, value: r.qty, onChange: (e) => up(i, { qty: e.target.value }) }),
+      h('select', { value: r.unit, onChange: (e) => up(i, { unit: e.target.value }) }, ['gr', 'ml'].map((u) => h('option', { key: u, value: u }, u))),
+      h('button', { className: 'x', 'aria-label': 'Hapus', onClick: () => onChange(rows.filter((_, k) => k !== i)) }, '\u00d7'))),
+    h('button', { className: 'chip', onClick: () => onChange(rows.concat([{ name: '', unit: 'gr', qty: 0 }])) }, '+ Bahan'));
 }
-function calc(){
-  const bs=base(), m=(+$("margin").value||0)/100, dp=+$("pack").value||0;
-  $("base").textContent=rp(bs);
-  bots.forEach((b,i)=>{
-    const pack=(b.p===undefined||b.p==="")?dp:(+b.p||0);
-    const bahan=bs/1000*(+b.ml||0), hpp=bahan+pack, jual=hpp*(1+m);
-    const el=$("r"+i); if(!el)return;
-    el.innerHTML=`<span>Bahan ${rp(bahan)}</span><span>Kemasan ${rp(pack)}</span><span>HPP <b>${rp(hpp)}</b></span><span class="jual">Harga jual <b>${rp(jual)}</b></span>`;
+
+function App() {
+  const [tab, setTab] = useState('produksi');
+  const [data, setData] = useState(load);
+  const [items, setItems] = useState([]);
+  const [nid, setNid] = useState(2);
+  const [copied, setCopied] = useState(false);
+  const [copiedR, setCopiedR] = useState(false);
+  const [buf, setBuf] = useState(5);
+  const [cost, setCost] = useState(loadCost);
+  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} }, [data]);
+  useEffect(() => { try { localStorage.setItem(CKEY, JSON.stringify(cost)); } catch (e) {} }, [cost]);
+
+  const V = data.variants;
+  const C = cost;
+  const uc = (n) => unitCost(C, n) || 0;
+  const sumC = (rows) => rows.reduce((s, r) => s + num(r.qty) * uc(r.name), 0);
+  const batchCost = (v) => sumC(data.base) + num(data.susu) * uc(milkOf(v)) + sumC(v.mix);
+  const unmapped = [];
+  const chk = (n) => { if ((n || '').trim() && unitCost(C, n) === null && unmapped.indexOf(n) < 0) unmapped.push(n); };
+  data.base.forEach((r) => chk(r.name));
+  V.forEach((v) => { chk(milkOf(v)); v.mix.forEach((r) => chk(r.name)); });
+  const noPrice = C.items.filter((i) => num(i.price) === 0 && !/^air/i.test(i.name)).map((i) => i.name);
+  const warnTxt = [unmapped.length ? 'Belum dipetakan ke bahan belanja: ' + unmapped.join(', ') + '.' : '', noPrice.length ? 'Harga belum diisi: ' + noPrice.join(', ') + '.' : ''].filter(Boolean).join(' ');
+  const warn = warnTxt ? h('div', { className: 'card', style: { borderColor: 'var(--acc)' } }, h('span', { className: 'mini', style: { margin: 0 } }, '\u26a0\ufe0f ' + warnTxt)) : null;
+  const getV = (id) => V.find((v) => v.id === id) || V[0];
+  const upd = (id, p) => setItems(items.map((i) => i.id === id ? Object.assign({}, i, p) : i));
+  const add = () => { setItems(items.concat([{ id: nid, vid: V[0].id, size: 150, count: 1 }])); setNid(nid + 1); };
+  const del = (id) => setItems(items.filter((i) => i.id !== id));
+  const setBase = (rows) => setData(Object.assign({}, data, { base: rows }));
+  const setV = (id, p) => setData(Object.assign({}, data, { variants: V.map((v) => v.id === id ? Object.assign({}, v, p) : v) }));
+
+  const calc = (i) => {
+    const v = getV(i.vid), b = bt(data, v), c = num(i.count);
+    const tot = i.size === 'batch' ? c * b : c * i.size;
+    const f = b > 0 ? tot / b : 0;
+    const hp = f * batchCost(v) + (i.size === 'batch' ? 0 : c * packCost(C, i.size));
+    return { tot, f, v, hp, per: c > 0 ? hp / c : 0 };
+  };
+  const calcs = items.map(calc);
+  const F = calcs.reduce((s, c) => s + c.f, 0);
+  const totalMl = calcs.reduce((s, c) => s + c.tot, 0);
+  const perVariant = V.map((v) => ({ v, f: calcs.reduce((s, c) => s + (c.v.id === v.id ? c.f : 0), 0) })).filter((x) => x.f > 0);
+  const ik = (r) => (r.name || '').trim().toLowerCase() + '|' + r.unit;
+  const agg = {};
+  perVariant.forEach(({ v, f }) => v.mix.forEach((r) => {
+    const k = ik(r);
+    if (!agg[k]) agg[k] = { name: r.name, unit: r.unit, tot: 0, vs: {} };
+    const a = num(r.qty) * f; agg[k].tot += a; agg[k].vs[v.id] = { n: v.name, a: ((agg[k].vs[v.id] || {}).a || 0) + a };
+  }));
+  const shared = Object.keys(agg).filter((k) => Object.keys(agg[k].vs).length > 1);
+  const nm = (r) => r.name || '(tanpa nama)';
+  const B = num(buf);
+  const buffed = (x) => x > 0 ? Math.ceil(x * (1 + B / 100) - 1e-6) : 0;
+  const wb = (b, u) => ' (+cadangan: ' + fmt(b) + ' ' + u + ')';
+  const shareOf = (part, total, b) => Math.round(total > 0 ? part / total * b : 0);
+  const kRaw = sumQ(data.base) * F;
+  const kB = buffed(kRaw);
+  const conv = {};
+  perVariant.forEach(({ v, f }) => v.mix.forEach((r) => {
+    const m = C.map.find((x) => (x.recipe || '').trim().toLowerCase() === (r.name || '').trim().toLowerCase());
+    if (m && num(m.per) > 0 && num(m.per) !== 1) {
+      if (!conv[m.item]) conv[m.item] = { item: m.item, from: r.name, amt: 0 };
+      conv[m.item].amt += num(r.qty) * f * num(m.per);
+    }
+  }));
+  const convKeys = Object.keys(conv);
+  const milks = {};
+  perVariant.forEach(({ v, f }) => { const m = milkOf(v).trim() || 'Susu'; milks[m] = (milks[m] || 0) + f; });
+  const L = ['YANG HARUS DISIAPKAN', 'Total minuman: ' + fmt(totalMl) + ' ml', 'Cadangan: +' + fmt(B) + '% per bahan, dibulatkan ke atas', '', 'CAMPURAN KRIMER (SATU KESATUAN)', 'Campuran krimer: ' + fmt(sumQ(data.base) * F) + ' gr' + wb(kB, 'gr')];
+  data.base.forEach((r) => L.push('- ' + nm(r) + ': ' + fmt(num(r.qty) * F) + ' ' + r.unit + wb(shareOf(num(r.qty), sumQ(data.base), kB), r.unit)));
+  L.push('', 'SUSU');
+  Object.keys(milks).forEach((m) => L.push(m + ': ' + fmt(num(data.susu) * milks[m]) + ' ml' + wb(buffed(num(data.susu) * milks[m]), 'ml')));
+  if (convKeys.length) {
+    L.push('', 'BAHAN UNTUK DISEDUH (BUBUK)');
+    convKeys.forEach((k) => L.push(conv[k].item + ' (untuk seduh ' + conv[k].from + '): ' + fmt(conv[k].amt) + ' gr' + wb(buffed(conv[k].amt), 'gr')));
+  }
+  if (shared.length) {
+    L.push('', 'BAHAN GABUNGAN (DIPAKAI BEBERAPA VARIAN)');
+    shared.forEach((k) => {
+      L.push(nm(agg[k]) + ' (total): ' + fmt(agg[k].tot) + ' ' + agg[k].unit + wb(buffed(agg[k].tot), agg[k].unit));
+      Object.keys(agg[k].vs).forEach((id) => L.push('  - ' + nm(agg[k]) + ' u/ ' + agg[k].vs[id].n + ': ' + fmt(agg[k].vs[id].a) + ' ' + agg[k].unit + wb(shareOf(agg[k].vs[id].a, agg[k].tot, buffed(agg[k].tot)), agg[k].unit)));
+    });
+  }
+  perVariant.forEach(({ v, f }) => {
+    const rs = v.mix.filter((r) => shared.indexOf(ik(r)) < 0);
+    if (rs.length) { L.push('', 'KHUSUS ' + v.name.toUpperCase()); rs.forEach((r) => L.push(nm(r) + ': ' + fmt(num(r.qty) * f) + ' ' + r.unit + wb(buffed(num(r.qty) * f), r.unit))); }
   });
+  const text = L.join('\n');
+  const copyTo = (text, setF) => {
+    const done = () => { setF(true); setTimeout(() => setF(false), 2000); };
+    const fb = () => {
+      try {
+        const t = document.createElement('textarea');
+        t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+        document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); done();
+      } catch (e) {}
+    };
+    try { navigator.clipboard.writeText(text).then(done, fb); } catch (e) { fb(); }
+  };
+  const mixRows = (v, f) => {
+    const pair = {}, air = {};
+    const nmL = (x) => (x.name || '').trim().toLowerCase();
+    v.mix.forEach((r, i) => {
+      const m = /^air \(untuk (.+)\)$/i.exec((r.name || '').trim());
+      if (!m) return;
+      const t = m[1].trim().toLowerCase();
+      const ok = (x, k) => k !== i && pair[k] === undefined && !air[k] && !/^air \(untuk /i.test(nmL(x));
+      let j = v.mix.findIndex((x, k) => ok(x, k) && nmL(x) === t);
+      if (j < 0) j = v.mix.findIndex((x, k) => ok(x, k) && nmL(x).indexOf(t) >= 0);
+      if (j >= 0) { pair[j] = i; air[i] = true; }
+    });
+    const out = [];
+    v.mix.forEach((r, k) => {
+      if (air[k]) return;
+      const a = pair[k] !== undefined ? v.mix[pair[k]] : null;
+      const q = (num(r.qty) + (a ? num(a.qty) : 0)) * f;
+      const c = (num(r.qty) * uc(r.name) + (a ? num(a.qty) * uc(a.name) : 0)) * f;
+      out.push([(r.name || '(tanpa nama)') + (a ? ' + Air' : ''), q, a ? 'ml' : r.unit, c]);
+    });
+    return out;
+  };
+  const packOf = (vid) => items.reduce((s, it, k) => calcs[k].v.id === vid && it.size !== 'batch' ? s + num(it.count) * packCost(C, it.size) : s, 0);
+  const racik = perVariant.map(({ v, f }) => {
+    const rows = [[milkOf(v), num(data.susu) * f, 'ml', f * num(data.susu) * uc(milkOf(v))], ['Campuran krimer', sumQ(data.base) * f, 'gr', f * sumC(data.base)]].concat(mixRows(v, f));
+    const pk = packOf(v.id), tot = rows.reduce((s, x) => s + x[3], 0) + pk;
+    return { v, rows, pk, tot, sell: tot * (1 + num(C.margin) / 100) };
+  });
+  const R = ['RACIKAN FINAL'];
+  racik.forEach(({ v, rows }) => { R.push('', v.name); rows.forEach(([n, q, u]) => R.push(n + ': ' + fmt(q) + ' ' + u)); });
+  const rtext = R.join('\n');
+  const copy = () => copyTo(text, setCopied);
+  const copyR = () => copyTo(rtext, setCopiedR);
+
+  const row = (key, name, val, cls, b, c) => h('tr', { key, className: cls }, h('td', null, name), h('td', null, val), b === undefined ? null : h('td', null, b), c === undefined ? null : h('td', null, c));
+  const sec = (key, t) => h('tr', { key, className: 'sec' }, h('td', { colSpan: 2 }, t));
+
+  const itemCard = (it, k) => h('div', { className: 'card', key: it.id },
+    h('div', { className: 'head' }, h('span', null, 'Pesanan ' + (k + 1)),
+      h('button', { className: 'x', onClick: () => del(it.id), 'aria-label': 'Hapus' }, '\u00d7')),
+    h('select', { value: calcs[k].v.id, onChange: (e) => upd(it.id, { vid: Number(e.target.value) }) },
+      V.map((v) => h('option', { key: v.id, value: v.id }, v.name))),
+    h('label', null, 'Ukuran botol'),
+    h('div', { className: 'chips' }, SIZES.map((x) =>
+      h('button', { key: x, className: 'chip' + (it.size === x ? ' on' : ''), onClick: () => upd(it.id, { size: x }) },
+        x === 'batch' ? '1 batch (' + fmt(num(data.susu) / 1000) + ' liter susu)' : sizeLabel(x)))),
+    h('label', null, it.size === 'batch' ? 'Jumlah batch' : 'Jumlah botol'),
+    h('input', { type: 'number', inputMode: 'numeric', min: 0, value: it.count, onChange: (e) => upd(it.id, { count: e.target.value }) }),
+    h('div', { className: 'mini' }, 'Subtotal: ' + fmt(calcs[k].tot) + ' ml'),
+    h('div', { className: 'mini' }, 'HPP per ' + (it.size === 'batch' ? 'batch' : 'botol') + ': ' + rp(calcs[k].per) + ' \u00b7 Harga jual: ' + rp(calcs[k].per * (1 + num(C.margin) / 100))));
+
+  const empty = items.length === 0;
+  const produksi = h('div', null,
+    h('p', { className: 'sub' }, 'Tambah beberapa pesanan, lalu lihat total yang harus disiapkan. Takaran mengikuti tab Resep.'),
+    warn,
+    items.map(itemCard),
+    h('button', { className: 'add', onClick: add }, '+ Tambah resep lain'),
+    empty ? h('p', { className: 'mini' }, 'Belum ada pesanan. Tekan "+ Tambah resep lain" untuk mulai.') : h(React.Fragment, null,
+    h('h2', null, 'Yang harus disiapkan'),
+    h('div', { className: 'card' },
+      h('div', { className: 'sum' },
+        h('div', null, h('b', null, fmt(totalMl) + ' ml'), h('span', null, 'Total minuman')),
+        h('div', null, h('b', null, fmt(num(data.susu) * F) + ' ml'), h('span', null, 'Susu')),
+        h('div', null, h('b', null, fmt(sumQ(data.base) * F) + ' gr'), h('span', null, 'Campuran krimer'))),
+      h('label', null, 'Cadangan (% dari hasil, dibulatkan ke atas)'),
+      h('input', { type: 'number', inputMode: 'decimal', min: 0, step: 'any', value: buf, onChange: (e) => setBuf(e.target.value) }),
+      h('table', { style: { marginTop: 8 } }, h('thead', null, h('tr', null, h('th', null, 'Bahan'), h('th', null, 'Hasil'), h('th', null, '+ Cadangan'), h('th', null, 'Biaya'))), h('tbody', null,
+        sec('s1', 'CAMPURAN KRIMER (SATU KESATUAN)'),
+        row('k', 'Campuran krimer', fmt(sumQ(data.base) * F) + ' gr', 'b', fmt(kB) + ' gr', rp(F * sumC(data.base))),
+        data.base.map((r, i) => row('k' + i, '\u2013 ' + (r.name || '(tanpa nama)'), fmt(num(r.qty) * F) + ' ' + r.unit, 'sub', fmt(shareOf(num(r.qty), sumQ(data.base), kB)) + ' ' + r.unit, rp(num(r.qty) * F * uc(r.name)))),
+        sec('s2', 'SUSU'),
+        Object.keys(milks).map((m) => row('su' + m, m, fmt(num(data.susu) * milks[m]) + ' ml', 'b', fmt(buffed(num(data.susu) * milks[m])) + ' ml', rp(num(data.susu) * milks[m] * uc(m)))),
+        convKeys.length ? [
+          sec('cv', 'BAHAN UNTUK DISEDUH (BUBUK)'),
+          convKeys.map((k) => row('cv' + k, conv[k].item + ' (untuk seduh ' + conv[k].from + ')', fmt(conv[k].amt) + ' gr', 'b', fmt(buffed(conv[k].amt)) + ' gr', ''))
+        ] : null,
+        shared.length ? [
+          sec('sh', 'BAHAN GABUNGAN (DIPAKAI BEBERAPA VARIAN)'),
+          shared.map((k) => [
+            row('sh' + k, (agg[k].name || '(tanpa nama)') + ' (total)', fmt(agg[k].tot) + ' ' + agg[k].unit, 'b', fmt(buffed(agg[k].tot)) + ' ' + agg[k].unit, rp(agg[k].tot * uc(agg[k].name))),
+            Object.keys(agg[k].vs).map((id) => row('sh' + k + id, '\u2013 ' + (agg[k].name || '(tanpa nama)') + ' u/ ' + agg[k].vs[id].n, fmt(agg[k].vs[id].a) + ' ' + agg[k].unit, 'sub', fmt(shareOf(agg[k].vs[id].a, agg[k].tot, buffed(agg[k].tot))) + ' ' + agg[k].unit, rp(agg[k].vs[id].a * uc(agg[k].name))))
+          ])
+        ] : null,
+        perVariant.map(({ v, f }) => {
+          const rs = v.mix.filter((r) => shared.indexOf(ik(r)) < 0);
+          return rs.length ? [
+            sec('v' + v.id, 'KHUSUS ' + v.name.toUpperCase()),
+            rs.map((r, i) => row(v.id + '-' + i, r.name || '(tanpa nama)', fmt(num(r.qty) * f) + ' ' + r.unit, undefined, fmt(buffed(num(r.qty) * f)) + ' ' + r.unit, rp(num(r.qty) * f * uc(r.name))))
+          ] : null;
+        }),
+        racik.length ? [
+          sec('hp', 'TOTAL HPP PER VARIAN (BAHAN + KEMASAN)'),
+          racik.map(({ v, tot, sell }) => [
+            row('hpt' + v.id, v.name + ': HPP', '', 'b', '', rp(tot)),
+            row('hps' + v.id, v.name + ': harga jual', '', 'b', '', rp(sell))
+          ])
+        ] : null)),
+      h('p', { className: 'note' }, 'Kolom + Cadangan = hasil dikali (1 + persen cadangan), dibulatkan ke atas (rincian di bawah total dibagi proporsional). Campuran krimer diaduk dulu sebelum dicampur dengan susu dan campuran varian. Asumsi 1 gr \u2248 1 ml, hasil asli bisa sedikit meleset.'),
+      h('button', { className: 'add', style: { marginTop: 12 }, onClick: copy }, copied ? '\u2713 Tersalin' : 'Copy resep ini')),
+    h('h2', null, 'Racikan Final'),
+    h('div', { className: 'card' },
+      h('table', null, h('thead', null, h('tr', null, h('th', null, 'Bahan'), h('th', null, 'Jumlah'), h('th', null, 'Biaya'))), h('tbody', null,
+        racik.map(({ v, rows, pk, tot, sell }) => [
+          sec('r' + v.id, v.name.toUpperCase()),
+          rows.map(([n, q, u, c], i) => row('r' + v.id + '-' + i, n, fmt(q) + ' ' + u, undefined, rp(c))),
+          row('rp' + v.id, 'Kemasan (botol + stiker)', '', undefined, rp(pk)),
+          row('rt' + v.id, 'Total HPP', '', 'b', rp(tot)),
+          row('rs' + v.id, 'Harga jual (HPP + margin ' + fmt(num(C.margin)) + '%)', '', 'b', rp(sell))
+        ]))),
+      h('p', { className: 'note' }, 'Susu dan campuran krimer dipisah per varian, jenis susunya mengikuti tab Resep (UHT atau Oatside). Bahan seperti matcha, teh, dan gula digabung dengan airnya karena sudah diseduh atau dilarutkan (asumsi 1 gr \u2248 1 ml). Bahan lain per varian, tidak digabung.'),
+      h('button', { className: 'add', style: { marginTop: 12 }, onClick: copyR }, copiedR ? '\u2713 Tersalin' : 'Copy Racikan Final'))));
+
+  const setC = (p) => setCost(Object.assign({}, cost, p));
+  const setItem = (i, p) => setC({ items: C.items.map((x, k) => k === i ? Object.assign({}, x, p) : x) });
+  const setMap = (i, p) => setC({ map: C.map.map((x, k) => k === i ? Object.assign({}, x, p) : x) });
+  const inp = (v, on, props) => h('input', Object.assign({ value: v, onChange: (e) => on(e.target.value) }, props));
+  const numP = { type: 'number', inputMode: 'decimal', min: 0, step: 'any' };
+  const itemOpts = (cur) => C.items.map((x) => h('option', { key: x.name, value: x.name }, x.name));
+
+  const biaya = h('div', null,
+    h('p', { className: 'sub' }, 'Data harga belanja. Ubah harga atau isi kemasan, HPP di tab Produksi dan HPP ikut berubah.'),
+    warn,
+    h('div', { className: 'card' },
+      h('table', { className: 'tb' },
+        h('thead', null, h('tr', null, ['Bahan', 'Satuan Beli', 'Isi (gr/ml)', 'Harga Beli (Rp)', 'Harga per gr/ml', ''].map((t, i) => h('th', { key: i }, t)))),
+        h('tbody', null, C.items.map((it, i) => h('tr', { key: i },
+          h('td', null, inp(it.name, (x) => setItem(i, { name: x }))),
+          h('td', null, inp(it.unit, (x) => setItem(i, { unit: x }))),
+          h('td', null, inp(it.qty, (x) => setItem(i, { qty: x }), numP)),
+          h('td', null, inp(it.price, (x) => setItem(i, { price: x }), numP)),
+          h('td', null, fmt(ppu(it))),
+          h('td', null, h('button', { className: 'x', 'aria-label': 'Hapus', onClick: () => setC({ items: C.items.filter((_, k) => k !== i) }) }, '\u00d7')))))),
+      h('div', { className: 'btns' }, h('button', { className: 'chip', onClick: () => setC({ items: C.items.concat([{ name: '', unit: 'Pack', qty: 1, price: 0 }]) }) }, '+ Tambah bahan'))),
+    h('div', { className: 'card' },
+      h('div', { className: 'head' }, h('span', null, 'Kemasan per ukuran botol')),
+      [150, 200, 250, 1000].map((s) => h('div', { className: 'er', key: s, style: { gridTemplateColumns: '70px 1fr' } },
+        h('span', null, sizeLabel(s)),
+        h('select', { value: C.pack[s] || '', onChange: (e) => setC({ pack: Object.assign({}, C.pack, { [s]: e.target.value }) }) }, [h('option', { key: '-', value: '' }, '(tanpa kemasan)')].concat(itemOpts())))),
+      h('label', null, 'Stiker label per botol'),
+      inp(C.sticker, (x) => setC({ sticker: x }), numP),
+      h('p', { className: 'note' }, 'Botol 200 ml belum ada di daftar harga, jadi sementara memakai Botol 250 ml. Ubah di sini kalau berbeda. Ukuran 1 batch tidak dihitung kemasan.')),
+    h('div', { className: 'card' },
+      h('div', { className: 'head' }, h('span', null, 'Pemetaan bahan resep ke bahan belanja')),
+      h('p', { className: 'mini', style: { marginTop: 0, marginBottom: 8 } }, 'Kolom terakhir: berapa gr/ml bahan belanja untuk 1 gr/ml bahan di resep. Kopi dihitung 10 gr bubuk per 100 ml seduhan (0,1 gr/ml), bisa juga diubah di tab Resep.'),
+      C.map.map((m, i) => h('div', { className: 'er', key: i, style: { gridTemplateColumns: '1fr 1fr 64px 28px' } },
+        inp(m.recipe, (x) => setMap(i, { recipe: x })),
+        h('select', { value: m.item, onChange: (e) => setMap(i, { item: e.target.value }) }, itemOpts()),
+        inp(m.per, (x) => setMap(i, { per: x, per100: undefined }), numP),
+        h('button', { className: 'x', 'aria-label': 'Hapus', onClick: () => setC({ map: C.map.filter((_, k) => k !== i) }) }, '\u00d7'))),
+      h('div', { className: 'btns' },
+        h('button', { className: 'chip', onClick: () => setC({ map: C.map.concat([{ recipe: '', item: C.items[0] ? C.items[0].name : '', per: 1 }]) }) }, '+ Pemetaan'),
+        h('button', { className: 'chip', onClick: () => { if (confirm('Kembalikan semua harga ke awal?')) setCost(COST0); } }, 'Reset harga'))));
+
+  const kIdx = C.map.findIndex((m) => (m.recipe || '').trim().toLowerCase() === 'kopi');
+  const kM = C.map[kIdx];
+  const sellOf = (x) => x * (1 + num(C.margin) / 100);
+  const hppOf = (v, s) => { const b = bt(data, v); return b > 0 ? s / b * batchCost(v) + packCost(C, s) : 0; };
+  const HS = [150, 200, 250, 1000];
+  const vTable = (fn) => h('div', { className: 'card' }, h('table', null,
+    h('thead', null, h('tr', null, h('th', null, 'Varian'), HS.map((s) => h('th', { key: s }, sizeLabel(s))))),
+    h('tbody', null, V.map((v) => h('tr', { key: v.id }, h('td', null, v.name), HS.map((s) => h('td', { key: s }, rp(fn(v, s)))))))));
+  const hpp = h('div', null,
+    h('p', { className: 'sub' }, 'HPP dihitung dari tab Resep dan tab Biaya Bahan dan Kemasan, memakai takaran resep tanpa cadangan. Margin dihitung sebagai persen di atas HPP.'),
+    warn,
+    h('div', { className: 'card' }, h('label', { style: { marginTop: 0 } }, 'Margin (% dari HPP)'), inp(C.margin, (x) => setC({ margin: x }), numP)),
+    h('h2', null, 'HPP per botol (bahan + botol + stiker)'),
+    vTable(hppOf),
+    h('h2', null, 'Harga jual per botol (HPP + margin)'),
+    vTable((v, s) => sellOf(hppOf(v, s))),
+    h('h2', null, 'Per batch (acuan susu per batch, tanpa kemasan)'),
+    h('div', { className: 'card' }, h('table', null,
+      h('thead', null, h('tr', null, ['Varian', 'Volume jadi', 'HPP bahan', 'Harga jual'].map((t) => h('th', { key: t }, t)))),
+      h('tbody', null, V.map((v) => h('tr', { key: v.id }, h('td', null, v.name), h('td', null, fmt(bt(data, v)) + ' ml'), h('td', null, rp(batchCost(v))), h('td', null, rp(sellOf(batchCost(v))))))))));
+
+  const resep = h('div', null,
+    h('p', { className: 'sub' }, 'Data resep per batch. Perubahan di sini langsung dipakai di tab Produksi dan tersimpan di browser ini.'),
+    h('div', { className: 'card' },
+      h('div', { className: 'head' }, h('span', null, 'Campuran krimer (per batch)'), h('span', null, '\u00b1' + fmt(sumQ(data.base)) + ' gr')),
+      h(Rows, { rows: data.base, onChange: setBase })),
+    h('div', { className: 'card' },
+      h('div', { className: 'head' }, h('span', null, 'Acuan susu per batch')),
+      h('div', { className: 'er', style: { gridTemplateColumns: '1fr 62px' } },
+        h('input', { type: 'number', inputMode: 'decimal', min: 0, value: data.susu, onChange: (e) => setData(Object.assign({}, data, { susu: e.target.value })) }),
+        h('span', { className: 'mini', style: { margin: 0 } }, 'ml'))),
+    kM ? h('div', { className: 'card' },
+      h('div', { className: 'head' }, h('span', null, 'Kopi bubuk (untuk seduh kopi)')),
+      h('label', { style: { marginTop: 0 } }, 'Kopi bubuk per 100 ml kopi seduhan (gr)'),
+      inp(kM.per100 !== undefined ? kM.per100 : +(num(kM.per) * 100).toFixed(2), (x) => setMap(kIdx, { per100: x, per: num(x) / 100 }), numP),
+      h('p', { className: 'note' }, 'Dipakai untuk menghitung kopi bubuk di Yang harus disiapkan dan HPP kopi.')) : null,
+    V.map((v) => h('div', { className: 'card', key: v.id },
+      h('div', { className: 'head' }, h('span', null, 'Varian'),
+        V.length > 1 ? h('button', { className: 'x', 'aria-label': 'Hapus varian', onClick: () => setData(Object.assign({}, data, { variants: V.filter((x) => x.id !== v.id) })) }, '\u00d7') : null),
+      h('input', { className: 'nm', value: v.name, onChange: (e) => setV(v.id, { name: e.target.value }), style: { marginBottom: 8 } }),
+      h('label', null, 'Jenis susu'),
+      h('input', { value: milkOf(v), onChange: (e) => setV(v.id, { milk: e.target.value }), style: { marginBottom: 8 } }),
+      h(Rows, { rows: v.mix, onChange: (rows) => setV(v.id, { mix: rows }) }),
+      h('div', { className: 'mini' }, 'Total batch: \u00b1' + fmt(bt(data, v)) + ' ml'))),
+    h('div', { className: 'btns' },
+      h('button', { className: 'chip', onClick: () => setData(Object.assign({}, data, { variants: V.concat([{ id: data.nextId, name: 'Varian baru', milk: 'Susu UHT', mix: [] }]), nextId: data.nextId + 1 })) }, '+ Tambah varian'),
+      h('button', { className: 'chip', onClick: () => { if (confirm('Kembalikan semua resep ke awal?')) setData(DEFAULT); } }, 'Reset resep')));
+
+  return h('div', null,
+    h('h1', null, '\u2615 Kalkulator Resep Kopi Susu'),
+    h('div', { className: 'tabs', style: { marginTop: 10 } },
+      h('button', { className: 'chip' + (tab === 'produksi' ? ' on' : ''), onClick: () => setTab('produksi') }, 'Produksi'),
+      h('button', { className: 'chip' + (tab === 'resep' ? ' on' : ''), onClick: () => setTab('resep') }, 'Resep'),
+      h('button', { className: 'chip' + (tab === 'biaya' ? ' on' : ''), onClick: () => setTab('biaya') }, 'Biaya Bahan dan Kemasan'),
+      h('button', { className: 'chip' + (tab === 'hpp' ? ' on' : ''), onClick: () => setTab('hpp') }, 'HPP'),
+      h('a', { className: 'chip', href: 'kalkulator.html' }, 'Kalkulator HPP')),
+    tab === 'produksi' ? produksi : tab === 'resep' ? resep : tab === 'biaya' ? biaya : hpp);
 }
-$("ings").addEventListener("input",e=>{const t=e.target,i=t.dataset.i;if(i==null)return;ings[i][t.dataset.k]=t.dataset.k==="v"?(+t.value||0):t.value;calc()});
-$("ings").addEventListener("click",e=>{const d=e.target.dataset.del;if(d==null)return;ings.splice(d,1);drawIngs();calc()});
-$("addIng").onclick=()=>{ings.push({n:"",v:0});drawIngs();calc();const f=$("ings").querySelectorAll("input[data-k=n]");f[f.length-1].focus()};
-$("bots").addEventListener("input",e=>{const t=e.target;
-  if(t.dataset.b!=null)bots[t.dataset.b].ml=t.value;
-  if(t.dataset.p!=null)bots[t.dataset.p].p=t.value;calc()});
-$("bots").addEventListener("click",e=>{const d=e.target.dataset.delb;if(d==null)return;bots.splice(d,1);drawBots()});
-$("addBot").onclick=()=>{bots.push({ml:""});drawBots();const f=$("bots").querySelectorAll("input[data-b]");f[f.length-1].focus()};
-$("margin").oninput=calc;$("pack").oninput=calc;
-drawIngs();drawBots();
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 </script>
 </body>
 </html>
